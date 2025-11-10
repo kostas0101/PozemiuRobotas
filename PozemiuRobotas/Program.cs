@@ -14,15 +14,16 @@ namespace PozemiuRobotas
             ConsoleKeyInfo input;
             int botx = 50, boty = 50, mapx = 100, mapy = 100;
             int[,] map = new int[mapx, mapy];
-            int roomNr = 0, moveCounter = 0;
-            bool hitSaw = false, hitSpyke = false;
+            int roomNr = 0, moveCounter = 0, releasCounter = 0 ;
+            bool hitSaw = false, hitSpyke = false, gotKey = false, exited = false, hitEnmay=false;
 
 
 
             List<Saw> saws = new List<Saw>();
             List<Spyke> spykes = new List<Spyke>();
+            Enamy enamy = new Enamy(0,0,false);
 
-            Map.generateMap(map, botx, boty, saws, spykes);
+            Map.generateMap(map, botx, boty, saws, spykes, enamy);
 
             Console.WriteLine("Press any button");
             Console.ReadKey();
@@ -31,7 +32,7 @@ namespace PozemiuRobotas
             {
                 Console.Clear();
 
-                Map.drawMap(map, botx, boty, saws, spykes);
+                Map.drawMap(map, botx, boty, saws, spykes, enamy);
 
                 input = Console.ReadKey();
                 if (input.Key == ConsoleKey.UpArrow && boty > 0 && (map[boty - 1, botx] == 1 || map[boty - 1, botx] >= 20))
@@ -53,6 +54,8 @@ namespace PozemiuRobotas
 
                 foreach (Saw saw in saws)
                     saw.Move(map);
+                if (enamy.active)
+                    enamy.Chase(botx, boty);
 
                 hitSaw = false;
                 foreach (Saw saw in saws)
@@ -60,6 +63,12 @@ namespace PozemiuRobotas
                         hitSaw = true;
                 if (hitSaw)
                     break;
+
+                if (botx == enamy.x && boty == enamy.y)
+                {
+                    hitEnmay = true;
+                    break;
+                }
 
                 if (spykes[0].up)
                 {
@@ -70,29 +79,69 @@ namespace PozemiuRobotas
                     if (hitSpyke)
                         break;
                 }
-
-                if (map[boty, botx] == 34)
+                if (map[boty, botx] == 36)
+                {
+                    exited = true;
+                    break;
+                }
+                else if (map[boty, botx] == 35)
+                {
+                    map[boty, botx] = 1;
+                    gotKey = true;
+                    
+                }
+                else if (map[boty, botx] == 34)
                 {
                     map[boty, botx] = 1;
                     roomNr++;
                 }
                 else if (map[boty, botx] >= 20 && map[boty, botx] <= 29)
                     break;
+
+                if(gotKey)
+                {
+                    releasCounter++;
+                    if(releasCounter > 10)
+                        enamy.active = true;
+                }
+
+                if (roomNr >= 2)
+                {
+                    map[56, 50] = 1;
+                    map[56, 49] = 30;
+                    map[56, 51] = 31;
+                }
+
+                if (gotKey && Math.Sqrt(Math.Pow(44 - boty, 2) + Math.Pow(50 - botx, 2)) <= 3)
+                {
+                    map[44, 50] = 1;
+                    map[44, 49] = 32;
+                    map[44, 51] = 33;
+                }
             }
             Console.Clear();
-            Console.WriteLine("You died");
+            if (exited)
+            {
+                Console.WriteLine("You survived");
+            }
+            else
+            {
+                Console.WriteLine("You died");
 
-            if (map[boty, botx] == 20)
-                Console.WriteLine("Fenll into spykes");
-            else if (map[boty, botx] == 21)
-                Console.WriteLine("Fell into a pit");
-            else if (hitSaw)
-                Console.WriteLine("Got hit by a saw");
-            else if (hitSpyke)
-                Console.WriteLine("Got hit by a hiden Spyke");
+                if (map[boty, botx] == 20)
+                    Console.WriteLine("Fenll into spykes");
+                else if (map[boty, botx] == 21)
+                    Console.WriteLine("Fell into a pit");
+                else if (hitSaw)
+                    Console.WriteLine("Got hit by a saw");
+                else if (hitSpyke)
+                    Console.WriteLine("Got hit by a hiden spyke");
+                else if (hitEnmay)
+                    Console.WriteLine("Got hit by an enamy");
 
-            Console.WriteLine("Press any button");
-            Console.ReadKey();
+                Console.WriteLine("Press any button");
+                Console.ReadKey();
+            }
             //Console.WriteLine(input.KeyChar);
 
             //drawMap(map);

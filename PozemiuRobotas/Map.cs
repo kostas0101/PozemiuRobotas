@@ -9,7 +9,7 @@ namespace PozemiuRobotas
 {
     public static class Map
     {
-        public static void generateMap(int[,] map, int botx, int boty, List<Saw> saws, List<Spyke> spykes)
+        public static void generateMap(int[,] map, int botx, int boty, List<Saw> saws, List<Spyke> spykes, Enamy enamy)
         {
             for (int i = 0; i < map.GetLength(0); i++)
                 for (int j = 0; j < map.GetLength(1); j++)
@@ -21,8 +21,8 @@ namespace PozemiuRobotas
 
             Random random = new Random();
             int hallwayLength = 10 + random.Next(0, 5);
-            int x, y;
-            bool found;
+            int x = 0, y = 0;
+            bool found = false;
 
             //EXIT
             for (int i = boty; i > boty - hallwayLength; i--)
@@ -32,9 +32,9 @@ namespace PozemiuRobotas
                 map[i, boty - 1] = 1;
             }
 
-            map[boty - hallwayLength, boty] = 10;
-            map[boty - hallwayLength, boty + 1] = 10;
-            map[boty - hallwayLength, boty - 1] = 10;
+            map[boty - hallwayLength, boty] = 36;
+            map[boty - hallwayLength, boty + 1] = 36;
+            map[boty - hallwayLength, boty - 1] = 36;
 
             map[boty - 6, boty] = 11;
             map[boty - 6, boty - 1] = 11;
@@ -69,6 +69,46 @@ namespace PozemiuRobotas
             map[boty + 6, boty] = 12;
             map[boty + 6, boty - 1] = 12;
             map[boty + 6, boty + 1] = 12;
+
+            int tempy = random.Next(boty + hallwayLength + 1, boty + hallwayLength + 10) + 16;
+            for (int i = botx + hallwayLength; i < tempy; i++)
+                for (int j = boty - 5; j <= boty + 5; j++)
+                    map[i, j] = 1;
+
+            map[tempy - 3, boty] = 35;
+
+            for (int i = botx + hallwayLength + 1; i < tempy - 5; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    y = (random.Next(-5, 6) + boty);
+                    if (random.Next(0, 2) == 0)
+                        for (int j = random.Next(3, 10); j > 0; j--)
+                        {
+                            if (map[i, y] != 1)
+                                break;
+                            else
+                            {
+                                map[i, y] = 20;
+                                y++;
+                            }
+                        }
+                    else
+                        for (int j = random.Next(3, 9); j > 0; j--)
+                        {
+                            if (map[i, y] != 1)
+                                break;
+                            else
+                            {
+                                map[i, y] = 20;
+                                y--;
+                            }
+                        }
+                }
+            }
+
+            enamy.y = tempy - 1;
+            enamy.x = boty;
 
 
             //LEFT
@@ -150,7 +190,7 @@ namespace PozemiuRobotas
 
         }
 
-        public static void drawMap(int[,] map, int botx, int boty, List<Saw> saws, List<Spyke> spykes)
+        public static void drawMap(int[,] map, int botx, int boty, List<Saw> saws, List<Spyke> spykes, Enamy enamy)
         {
             for (int i = 0; i < 22; i++)
                 Console.Write("//");
@@ -182,16 +222,16 @@ namespace PozemiuRobotas
                         Console.Write("▓▓");
                     else if (map[i, j] == 0)
                         Console.Write("██");
+                    else if (i == enamy.y && j == enamy.x)
+                        Console.Write("<>");
                     else if (isSaw)
                         Console.Write("{}");
                     else if (isSpyke && spykes[0].up)
                         Console.Write(@"/\");
-                    else if(isSpyke)
+                    else if (isSpyke)
                         Console.Write("~~");
                     else if (map[i, j] == 1)
                         Console.Write("  ");
-                    else if (map[i, j] == 10)
-                        Console.Write("EE");
                     else if (map[i, j] == 11)
                         Console.Write("__");
                     else if (map[i, j] == 12)
@@ -210,6 +250,10 @@ namespace PozemiuRobotas
                         Console.Write(" _");
                     else if (map[i, j] == 34)
                         Console.Write("++");
+                    else if (map[i, j] == 35)
+                        Console.Write("@~");
+                    else if (map[i, j] == 36)
+                        Console.Write("_/");
 
                     //░▒▓
                 }

@@ -41,7 +41,7 @@ namespace PozemiuRobotas
             public int y;
             public bool up;
 
-            public Spyke(int x, int y,bool up)
+            public Spyke(int x, int y, bool up)
             {
                 this.x = x;
                 this.y = y;
@@ -54,5 +54,32 @@ namespace PozemiuRobotas
             }
 
         }
+
+        public class Enamy
+        {
+            public int x;
+            public int y;
+            public bool active;
+
+            public Enamy(int x, int y, bool active)
+            {
+                this.x = x;
+                this.y = y;
+                this.active = active;
+            }
+
+            public void Chase(int botx, int boty)
+            {
+                if (botx < x)
+                    x--;
+                if (botx > x)
+                    x++;
+                if (boty < y)
+                    y--;
+                if (boty > y)
+                    y++;
+            }
+        }
+
     }
 }
