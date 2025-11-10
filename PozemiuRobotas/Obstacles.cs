@@ -60,12 +60,14 @@ namespace PozemiuRobotas
             public int x;
             public int y;
             public bool active;
+            public int releasCounter;
 
             public Enamy(int x, int y, bool active)
             {
                 this.x = x;
                 this.y = y;
                 this.active = active;
+                this.releasCounter = 0;
             }
 
             public void Chase(int botx, int boty)
