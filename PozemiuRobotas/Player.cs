@@ -38,9 +38,15 @@ namespace PozemiuRobotas
 
             public void drawBattery()
             {
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.Write("\n" + "Battery level: " + battery + "\n" + "|");
                 for (int i = 0; i < battery / 10; i++)
-                    Console.Write("█|");
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("█");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write("|");
+                }
             }
         }
     }

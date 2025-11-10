@@ -152,7 +152,7 @@ namespace PozemiuRobotas
                 map[botx + 1, i] = 1;
                 map[botx - 1, i] = 1;
             }
-            
+
             for (int traps = 0; traps < 10; traps++)
             {
                 y = random.Next(-1, 2) + boty;
@@ -186,13 +186,15 @@ namespace PozemiuRobotas
 
         public static void drawMap(int[,] map, int botx, int boty, List<Saw> saws, List<Spyke> spykes, Enamy enamy)
         {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
             for (int i = 0; i < 22; i++)
-                Console.Write("//");
+                Console.Write("██");
             Console.WriteLine();
 
             for (int i = (boty - 10 < 0 ? 0 : (boty < map.GetLength(0) - 10 ? boty - 10 : boty - 10 - (10 - (map.GetLength(0) - boty)))); i < map.GetLength(0) && (boty > 10 ? i < boty + 10 : i < boty + 10 + (10 - boty)); i++)
             {
-                Console.Write("//");
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write("██");
 
                 for (int j = (botx - 10 < 0 ? 0 : (botx < map.GetLength(1) - 10 ? botx - 10 : botx - 10 - (10 - (map.GetLength(1) - botx)))); j < map.GetLength(1) && (botx > 10 ? j < botx + 10 : j < botx + 10 + (10 - botx)); j++)
                 {
@@ -206,6 +208,7 @@ namespace PozemiuRobotas
                         if (spyke.x == j && spyke.y == i)
                             isSpyke = true;
 
+                    Console.ForegroundColor = ConsoleColor.White;
                     if (i == boty && j == botx)
                         Console.Write("()");
                     else if (Math.Sqrt(Math.Pow(i - boty, 2) + Math.Pow(j - botx, 2)) >= 9)
@@ -215,11 +218,20 @@ namespace PozemiuRobotas
                     else if (map[i, j] == 0)
                         Console.Write("██");
                     else if (i == enamy.y && j == enamy.x)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write("<>");
+                    }
                     else if (isSaw)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write("{}");
+                    }
                     else if (isSpyke && spykes[0].up)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write(@"/\");
+                    }
                     else if (isSpyke)
                         Console.Write("~~");
                     else if (map[i, j] == 1)
@@ -229,9 +241,15 @@ namespace PozemiuRobotas
                     else if (map[i, j] == 12)
                         Console.Write("--");
                     else if (map[i, j] == 20)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write("^^");
+                    }
                     else if (map[i, j] == 21)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write("[]");
+                    }
                     else if (map[i, j] == 30)
                         Console.Write("- ");
                     else if (map[i, j] == 31)
@@ -241,20 +259,30 @@ namespace PozemiuRobotas
                     else if (map[i, j] == 33)
                         Console.Write(" _");
                     else if (map[i, j] == 34)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("++");
+                    }
                     else if (map[i, j] == 35)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("@~");
+                    }
                     else if (map[i, j] == 36)
                         Console.Write("_/");
 
                     //░▒▓
                 }
 
-                Console.Write("//");
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write("██");
                 Console.WriteLine();
             }
+
+            Console.ForegroundColor = ConsoleColor.DarkGray;
             for (int i = 0; i < 22; i++)
-                Console.Write("//");
+                Console.Write("██");
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }
