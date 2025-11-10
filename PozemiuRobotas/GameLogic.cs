@@ -11,6 +11,7 @@ namespace PozemiuRobotas
 {
     public static class GameLogic
     {
+
         public static void getInput(Robot robot, int[,] map)
         {
             ConsoleKeyInfo input;
@@ -38,7 +39,6 @@ namespace PozemiuRobotas
                 outOfBattery = true;
                 return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot, outOfBattery);
             }
-
 
             robot.moveCounter++;
             if (robot.moveCounter > 3)
@@ -75,6 +75,7 @@ namespace PozemiuRobotas
                 if (hitSpyke)
                     return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot, outOfBattery);
             }
+
             if (map[robot.boty, robot.botx] == 36)
             {
                 exited = true;
@@ -124,12 +125,16 @@ namespace PozemiuRobotas
             Console.Clear();
             if (exited)
             {
-                Console.WriteLine("You survived");
+                Console.WriteLine("====================");
+                Console.WriteLine("    You survived");
+                Console.WriteLine("====================");
                 Console.ReadKey();
             }
             else
             {
-                Console.WriteLine("You died");
+                Console.WriteLine("====================");
+                Console.WriteLine("      You died");
+                Console.WriteLine("====================");
 
                 if (map[robot.boty, robot.botx] == 20)
                     Console.WriteLine("Fenll into spykes");
@@ -148,7 +153,6 @@ namespace PozemiuRobotas
             }
 
             return true;
-
         }
     }
 

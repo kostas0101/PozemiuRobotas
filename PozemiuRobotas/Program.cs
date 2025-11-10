@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static PozemiuRobotas.Obstacles;
+using static PozemiuRobotas.GameLogic;
 using static PozemiuRobotas.Player;
 
 namespace PozemiuRobotas
@@ -13,21 +14,20 @@ namespace PozemiuRobotas
     {
         static void Main(string[] args)
         {
-            int runNo = 0;
             while (true)
             {
-                runNo++;
                 int StartMapx = 100, StartMapy = 100, StartBotx = 50, StartBoty = 50, batteryLevel = 100;
                 int[,] map = new int[StartMapx, StartMapy];
 
                 Robot robot = new Robot(StartBotx, StartBoty, batteryLevel);
                 List<Saw> saws = new List<Saw>();
                 List<Spyke> spykes = new List<Spyke>();
-
                 Enamy enamy = new Enamy(0, 0, false);
 
                 Console.Clear();
-                Console.WriteLine("Start run: " + runNo);
+                Console.WriteLine("=====================");
+                Console.WriteLine("      Start run");
+                Console.WriteLine("=====================");
                 Console.ReadKey();
 
                 Map.generateMap(map, robot.botx, robot.boty, saws, spykes, enamy);
@@ -35,11 +35,8 @@ namespace PozemiuRobotas
                 while (true)
                 {
                     Console.Clear();
-
                     Map.drawMap(map, robot.botx, robot.boty, saws, spykes, enamy);
-                    Console.Write("\n" + "Battery level: " + robot.battery + "\n" + "|");
-                    for (int i = 0; i < robot.battery / 10; i++)
-                        Console.Write("█|");
+                    robot.drawBattery();
 
                     GameLogic.getInput(robot, map);
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static PozemiuRobotas.Player;
 
 namespace PozemiuRobotas
 {
@@ -16,6 +17,7 @@ namespace PozemiuRobotas
             public int roomNr;
             public bool gotKey;
             public int battery;
+
 
             public Robot(int botx, int boty, int battery)
             {
@@ -32,6 +34,13 @@ namespace PozemiuRobotas
                 battery += 100;
                 if (battery > 200)
                     battery = 200;
+            }
+
+            public void drawBattery()
+            {
+                Console.Write("\n" + "Battery level: " + battery + "\n" + "|");
+                for (int i = 0; i < battery / 10; i++)
+                    Console.Write("█|");
             }
         }
     }

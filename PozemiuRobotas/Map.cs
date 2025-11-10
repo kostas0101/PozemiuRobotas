@@ -49,8 +49,6 @@ namespace PozemiuRobotas
                 map[i, boty + 1] = 1;
                 map[i, boty - 1] = 1;
             }
-            //lines of spykes, affter the keay, something chases you
-
 
             for (int traps = 0; traps < 10; traps++)
             {
@@ -120,7 +118,6 @@ namespace PozemiuRobotas
                 map[botx - 1, i] = 1;
             }
 
-
             for (int traps = 0; traps < 20; traps++)
             {
                 y = random.Next(-1, 2) + boty;
@@ -135,7 +132,6 @@ namespace PozemiuRobotas
                     map[y, x] = 21;
             }
 
-            //mooving saws
             x = random.Next(botx - hallwayLength - 10, botx - hallwayLength) - 10;
             for (int i = botx - hallwayLength; i > x; i--)
                 for (int j = boty - 3; j <= boty + 3; j++)
@@ -156,8 +152,7 @@ namespace PozemiuRobotas
                 map[botx + 1, i] = 1;
                 map[botx - 1, i] = 1;
             }
-            //map[botx, botx + hallwayLength - 1] = 0;
-            //map[botx, botx + 7] = 0;
+            
             for (int traps = 0; traps < 10; traps++)
             {
                 y = random.Next(-1, 2) + boty;
@@ -172,7 +167,6 @@ namespace PozemiuRobotas
                     map[y, x] = 20;
             }
 
-            //spykes going up and down
             int tempx = random.Next(botx + hallwayLength + 1, botx + hallwayLength + 10) + 10;
             for (int i = botx + hallwayLength; i < tempx; i++)
                 for (int j = boty - 5; j <= boty + 5; j++)
@@ -211,8 +205,6 @@ namespace PozemiuRobotas
                     foreach (var spyke in spykes)
                         if (spyke.x == j && spyke.y == i)
                             isSpyke = true;
-
-
 
                     if (i == boty && j == botx)
                         Console.Write("()");
@@ -263,7 +255,6 @@ namespace PozemiuRobotas
             }
             for (int i = 0; i < 22; i++)
                 Console.Write("//");
-
         }
     }
 }
