@@ -24,12 +24,20 @@ namespace PozemiuRobotas
                 robot.botx--;
             else if (input.Key == ConsoleKey.RightArrow && robot.botx < map.GetLength(1) - 1 && (map[robot.boty, robot.botx + 1] == 1 || map[robot.boty, robot.botx + 1] >= 20))
                 robot.botx++;
+
+            robot.battery--;
         }
 
 
         public static bool gameProcess(Robot robot, int[,] map, List<Spyke> spykes, List<Saw> saws, Enamy enamy)
         {
-            bool hitSaw = false, hitSpyke = false, exited = false, hitEnamy = false;
+            bool hitSaw = false, hitSpyke = false, exited = false, hitEnamy = false, outOfBattery = false;
+
+            if (robot.battery <= 0)
+            {
+                outOfBattery = true;
+                return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot, outOfBattery);
+            }
 
 
             robot.moveCounter++;
@@ -50,12 +58,12 @@ namespace PozemiuRobotas
                 if (robot.botx == saw.x && robot.boty == saw.y)
                     hitSaw = true;
             if (hitSaw)
-                return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot);
+                return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot, outOfBattery);
 
             if (robot.botx == enamy.x && robot.boty == enamy.y)
             {
                 hitEnamy = true;
-                return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot);
+                return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot, outOfBattery);
             }
 
             if (spykes[0].up)
@@ -65,26 +73,28 @@ namespace PozemiuRobotas
                     if (robot.botx == spyke.x && robot.boty == spyke.y)
                         hitSpyke = true;
                 if (hitSpyke)
-                    return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot);
+                    return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot, outOfBattery);
             }
             if (map[robot.boty, robot.botx] == 36)
             {
                 exited = true;
-                return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot);
+                return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot, outOfBattery);
             }
             else if (map[robot.boty, robot.botx] == 35)
             {
                 map[robot.boty, robot.botx] = 1;
                 robot.gotKey = true;
+                robot.addBattery();
 
             }
             else if (map[robot.boty, robot.botx] == 34)
             {
                 map[robot.boty, robot.botx] = 1;
                 robot.roomNr++;
+                robot.addBattery();
             }
             else if (map[robot.boty, robot.botx] >= 20 && map[robot.boty, robot.botx] <= 29)
-                return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot);
+                return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot, outOfBattery);
 
             if (robot.gotKey)
             {
@@ -109,7 +119,7 @@ namespace PozemiuRobotas
             return false;
         }
 
-        public static bool endGame(bool hitEnamy, bool hitSpyke, bool hitSaw, bool exited, int[,] map, Robot robot)
+        public static bool endGame(bool hitEnamy, bool hitSpyke, bool hitSaw, bool exited, int[,] map, Robot robot, bool outOfBattery)
         {
             Console.Clear();
             if (exited)
@@ -131,6 +141,8 @@ namespace PozemiuRobotas
                     Console.WriteLine("Got hit by a hiden spyke");
                 else if (hitEnamy)
                     Console.WriteLine("Got hit by an enamy");
+                else if (outOfBattery)
+                    Console.WriteLine("You ran out of battery");
 
                 Console.ReadKey();
             }
