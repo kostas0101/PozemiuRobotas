@@ -105,8 +105,8 @@ namespace PozemiuRobotas
                 }
             }
 
-            enamy.y = tempy - 1;
-            enamy.x = boty;
+            enamy.SetX(boty);
+            enamy.SetY(tempy - 1);
 
 
             //LEFT
@@ -200,24 +200,24 @@ namespace PozemiuRobotas
                 {
                     bool isSaw = false;
                     foreach (var saw in saws)
-                        if (saw.x == j && saw.y == i)
+                        if (saw.GetX() == j && saw.GetY() == i)
                             isSaw = true;
 
                     bool isSpyke = false;
                     foreach (var spyke in spykes)
-                        if (spyke.x == j && spyke.y == i)
+                        if (spyke.GetX() == j && spyke.GetY() == i)
                             isSpyke = true;
 
                     Console.ForegroundColor = ConsoleColor.White;
                     if (i == boty && j == botx)
                         Console.Write("()");
-                    else if (Math.Sqrt(Math.Pow(i - boty, 2) + Math.Pow(j - botx, 2)) >= 9)
+                    else if (Math.Sqrt(Math.Pow(i - boty, 2) + Math.Pow(j - botx, 2)) >= 8)
                         Console.Write("██");
-                    else if (Math.Sqrt(Math.Pow(i - boty, 2) + Math.Pow(j - botx, 2)) >= 6 && map[i, j] != 0)
+                    else if (Math.Sqrt(Math.Pow(i - boty, 2) + Math.Pow(j - botx, 2)) >= 5 && map[i, j] != 0)
                         Console.Write("▓▓");
                     else if (map[i, j] == 0)
                         Console.Write("██");
-                    else if (i == enamy.y && j == enamy.x)
+                    else if (i == enamy.GetY() && j == enamy.GetX())
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write("<>");
@@ -227,7 +227,7 @@ namespace PozemiuRobotas
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write("{}");
                     }
-                    else if (isSpyke && spykes[0].up)
+                    else if (isSpyke && spykes[0].GetStatus())
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write(@"/\");

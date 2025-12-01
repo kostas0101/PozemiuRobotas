@@ -17,16 +17,16 @@ namespace PozemiuRobotas
             ConsoleKeyInfo input;
 
             input = Console.ReadKey();
-            if (input.Key == ConsoleKey.UpArrow && robot.boty > 0 && (map[robot.boty - 1, robot.botx] == 1 || map[robot.boty - 1, robot.botx] >= 20))
-                robot.boty--;
-            else if (input.Key == ConsoleKey.DownArrow && robot.boty < map.GetLength(0) - 1 && (map[robot.boty + 1, robot.botx] == 1 || map[robot.boty + 1, robot.botx] >= 20))
-                robot.boty++;
-            else if (input.Key == ConsoleKey.LeftArrow && robot.botx > 0 && (map[robot.boty, robot.botx - 1] == 1 || map[robot.boty, robot.botx - 1] >= 20))
-                robot.botx--;
-            else if (input.Key == ConsoleKey.RightArrow && robot.botx < map.GetLength(1) - 1 && (map[robot.boty, robot.botx + 1] == 1 || map[robot.boty, robot.botx + 1] >= 20))
-                robot.botx++;
+            if (input.Key == ConsoleKey.UpArrow && robot.GetY() > 0 && (map[robot.GetY() - 1, robot.GetX()] == 1 || map[robot.GetY() - 1, robot.GetX()] >= 20))
+                robot.MoveUp();
+            else if (input.Key == ConsoleKey.DownArrow && robot.GetY() < map.GetLength(0) - 1 && (map[robot.GetY() + 1, robot.GetX()] == 1 || map[robot.GetY() + 1, robot.GetX()] >= 20))
+                robot.MoveDown();
+            else if (input.Key == ConsoleKey.LeftArrow && robot.GetX() > 0 && (map[robot.GetY(), robot.GetX() - 1] == 1 || map[robot.GetY(), robot.GetX() - 1] >= 20))
+                robot.MoveLeft();
+            else if (input.Key == ConsoleKey.RightArrow && robot.GetX() < map.GetLength(1) - 1 && (map[robot.GetY(), robot.GetX() + 1] == 1 || map[robot.GetY(), robot.GetX() + 1] >= 20))
+                robot.MoveRight();
 
-            robot.battery--;
+            robot.DecresBatteryLevel();
         }
 
 
@@ -34,84 +34,84 @@ namespace PozemiuRobotas
         {
             bool hitSaw = false, hitSpyke = false, exited = false, hitEnamy = false, outOfBattery = false;
 
-            if (robot.battery <= 0)
+            if (robot.GetBatteryLevel() <= 0)
             {
                 outOfBattery = true;
                 return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot, outOfBattery);
             }
 
-            robot.moveCounter++;
-            if (robot.moveCounter > 3)
+            robot.IncressMoveCounter();
+            if (robot.GetMoveCounter() > 3)
             {
-                robot.moveCounter = 0;
+                robot.REsetMoveCounter();
                 foreach (Spyke spyke in spykes)
                     spyke.Move();
             }
 
             foreach (Saw saw in saws)
                 saw.Move(map);
-            if (enamy.active)
-                enamy.Chase(robot.botx, robot.boty);
+            if (enamy.GetStatus())
+                enamy.Chase(robot.GetX(), robot.GetY());
 
             hitSaw = false;
             foreach (Saw saw in saws)
-                if (robot.botx == saw.x && robot.boty == saw.y)
+                if (robot.GetX() == saw.GetX() && robot.GetY() == saw.GetY())
                     hitSaw = true;
             if (hitSaw)
                 return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot, outOfBattery);
 
-            if (robot.botx == enamy.x && robot.boty == enamy.y)
+            if (robot.GetX() == enamy.GetX() && robot.GetY() == enamy.GetY())
             {
                 hitEnamy = true;
                 return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot, outOfBattery);
             }
 
-            if (spykes[0].up)
+            if (spykes[0].GetStatus())
             {
                 hitSpyke = false;
                 foreach (Spyke spyke in spykes)
-                    if (robot.botx == spyke.x && robot.boty == spyke.y)
+                    if (robot.GetX() == spyke.GetX() && robot.GetY() == spyke.GetY())
                         hitSpyke = true;
                 if (hitSpyke)
                     return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot, outOfBattery);
             }
 
-            if (map[robot.boty, robot.botx] == 36)
+            if (map[robot.GetY(), robot.GetX()] == 36)
             {
                 exited = true;
                 return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot, outOfBattery);
             }
-            else if (map[robot.boty, robot.botx] == 35)
+            else if (map[robot.GetY(), robot.GetX()] == 35)
             {
-                map[robot.boty, robot.botx] = 1;
-                robot.gotKey = true;
+                map[robot.GetY(), robot.GetX()] = 1;
+                robot.GotGateKey();
                 robot.addBattery();
 
             }
-            else if (map[robot.boty, robot.botx] == 34)
+            else if (map[robot.GetY(), robot.GetX()] == 34)
             {
-                map[robot.boty, robot.botx] = 1;
-                robot.roomNr++;
+                map[robot.GetY(), robot.GetX()] = 1;
+                robot.IncressRoomKeyNumber();
                 robot.addBattery();
             }
-            else if (map[robot.boty, robot.botx] >= 20 && map[robot.boty, robot.botx] <= 29)
+            else if (map[robot.GetY(), robot.GetX()] >= 20 && map[robot.GetY(), robot.GetX()] <= 29)
                 return endGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot, outOfBattery);
 
-            if (robot.gotKey)
+            if (robot.HasGateKey() && !enamy.GetStatus())
             {
-                enamy.releasCounter++;
-                if (enamy.releasCounter > 10)
-                    enamy.active = true;
+                enamy.IncresReleasCounter();
+                if (enamy.GetReleasCounter() > 10)
+                    enamy.SetStatus(true);
             }
 
-            if (robot.roomNr >= 2)
+            if (robot.GetRoomKeyNumber() >= 2)
             {
                 map[56, 50] = 1;
                 map[56, 49] = 30;
                 map[56, 51] = 31;
             }
 
-            if (robot.gotKey && Math.Sqrt(Math.Pow(44 - robot.boty, 2) + Math.Pow(50 - robot.botx, 2)) <= 3)
+            if (robot.HasGateKey() && Math.Sqrt(Math.Pow(44 - robot.GetY(), 2) + Math.Pow(50 - robot.GetX(), 2)) <= 3)
             {
                 map[44, 50] = 1;
                 map[44, 49] = 32;
@@ -136,9 +136,9 @@ namespace PozemiuRobotas
                 Console.WriteLine("      You died");
                 Console.WriteLine("====================");
 
-                if (map[robot.boty, robot.botx] == 20)
+                if (map[robot.GetY(), robot.GetX()] == 20)
                     Console.WriteLine("Fenll into spykes");
-                else if (map[robot.boty, robot.botx] == 21)
+                else if (map[robot.GetY(), robot.GetX()] == 21)
                     Console.WriteLine("Fell into a pit");
                 else if (hitSaw)
                     Console.WriteLine("Got hit by a saw");

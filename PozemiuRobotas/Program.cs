@@ -16,10 +16,10 @@ namespace PozemiuRobotas
         {
             while (true)
             {
-                int StartMapx = 100, StartMapy = 100, StartBotx = 50, StartBoty = 50, batteryLevel = 100;
-                int[,] map = new int[StartMapx, StartMapy];
+                int startMapX = 100, startMapY = 100, startBotX = 50, startBotY = 50, startBatteryLevel = 100;
+                int[,] map = new int[startMapX, startMapY];
 
-                Robot robot = new Robot(StartBotx, StartBoty, batteryLevel);
+                Robot robot = new Robot(startBotX, startBotY, startBatteryLevel);
                 List<Saw> saws = new List<Saw>();
                 List<Spyke> spykes = new List<Spyke>();
                 Enamy enamy = new Enamy(0, 0, false);
@@ -30,12 +30,12 @@ namespace PozemiuRobotas
                 Console.WriteLine("=====================");
                 Console.ReadKey();
 
-                Map.generateMap(map, robot.botx, robot.boty, saws, spykes, enamy);
+                Map.generateMap(map, robot.GetX(), robot.GetY(), saws, spykes, enamy);
 
                 while (true)
                 {
                     Console.Clear();
-                    Map.drawMap(map, robot.botx, robot.boty, saws, spykes, enamy);
+                    Map.drawMap(map, robot.GetX(), robot.GetY(), saws, spykes, enamy);
                     robot.drawBattery();
 
                     GameLogic.getInput(robot, map);
