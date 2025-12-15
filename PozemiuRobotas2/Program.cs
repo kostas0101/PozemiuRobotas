@@ -17,6 +17,8 @@ namespace PozemiuRobotas2
                 List<Spyke> spykes = new List<Spyke>();
                 Enamy enamy = ObstacleFactory.CreateEnamy(0, 0, false);
 
+                //test
+
                 Console.Clear();
                 Console.WriteLine("=====================");
                 Console.WriteLine("      Start run");
