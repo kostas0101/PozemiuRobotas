@@ -33,7 +33,9 @@ namespace PozemiuRobotas2
 
                 while (true)
                 {
-                    Console.Clear();
+                    Console.CursorVisible = false;
+                    Console.SetCursorPosition(0, 0);
+
                     Map.DrawMap(map, robot.GetX(), robot.GetY(), saws, spykes, enamy);
                     robot.DrawBattery();
 
