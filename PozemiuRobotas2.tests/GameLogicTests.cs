@@ -57,6 +57,6 @@ namespace PozemiuRobotas2.tests
 
             Assert.That(enamy.Status, Is.True);
         }
-        //test
+        //testa
     }
 }
