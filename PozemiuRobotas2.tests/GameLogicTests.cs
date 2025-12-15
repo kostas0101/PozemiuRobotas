@@ -10,7 +10,7 @@ namespace PozemiuRobotas2.tests
     public class GameLogicTests
     {
         [Test]
-        public void GameProcess_IncrementsMoveCounter_AndDoesNotEndGame()
+        public void GameProcess_IncrementsMoveCounter()
         {
             var robot = new Robot(0, 0, battery: 100);
             int[,] map = new int[60, 60];
@@ -57,6 +57,5 @@ namespace PozemiuRobotas2.tests
 
             Assert.That(enamy.Status, Is.True);
         }
-        //testa
     }
 }

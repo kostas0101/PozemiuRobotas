@@ -35,7 +35,7 @@
                 _RobotX = robotX;
                 _RobotY = robotY;
                 _MoveCounter = 0;
-                _RoomKeyNr = 2;
+                _RoomKeyNr = 0;
                 _GateKey = false;
                 _BatteryLevel = battery;
             }

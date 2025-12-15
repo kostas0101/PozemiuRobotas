@@ -1,10 +1,14 @@
-﻿using static PozemiuRobotas2.Obstacles;
+﻿using static PozemiuRobotas2.ObstacleFactory;
+using static PozemiuRobotas2.Obstacles;
 
 namespace PozemiuRobotas2
 {
     public static class Map
     {
         private static Random random = new Random();
+        private static IObstacleFactory sawFactory = new SawFactory();
+        private static IObstacleFactory spykeFactory = new SpykeFactory();
+        private static IEnamyFactory enamyFactory = new EnamyFactory();
 
         public static void GenerateMap(int[,] map, int botx, int boty, List<Saw> saws, List<Spyke> spykes, ref Enamy enamy)
         {
@@ -16,6 +20,19 @@ namespace PozemiuRobotas2
             CreateSideHallways(map, botx, boty, saws, spykes);
         }
 
+        private static void FillMap(int[,] map, int value)
+        {
+            for (int i = 0; i < map.GetLength(0); i++)
+                for (int j = 0; j < map.GetLength(1); j++)
+                    map[i, j] = value;
+        }
+
+        private static void CreateStartingArea(int[,] map, int botx, int boty)
+        {
+            for (int i = botx - 5; i <= botx + 5; i++)
+                for (int j = boty - 5; j <= boty + 5; j++)
+                    map[i, j] = MapConstants.floor;
+        }
 
 
         private static void CreateExitHallway(int[,] map, int botx, int boty, List<Saw> saws, ref Enamy enamy)
@@ -44,7 +61,6 @@ namespace PozemiuRobotas2
             int x = 0, y = 0;
             bool found = false;
 
-            //KEY
             hallwayLength = 15 + random.Next(0, 10);
             for (int i = boty; i < boty + hallwayLength; i++)
             {
@@ -108,25 +124,11 @@ namespace PozemiuRobotas2
                 }
             }
 
-            enamy = ObstacleFactory.CreateEnamy(boty, tempy - 1, false);
+            enamy = enamyFactory.Create(boty, tempy - 1, false);
             EnamyUpdates e = new EnamyUpdates();
             enamy.StatusChange += e.StatusChange;
         }
 
-
-        private static void FillMap(int[,] map, int value)
-        {
-            for (int i = 0; i < map.GetLength(0); i++)
-                for (int j = 0; j < map.GetLength(1); j++)
-                    map[i, j] = value;
-        }
-
-        private static void CreateStartingArea(int[,] map, int botx, int boty)
-        {
-            for (int i = botx - 5; i <= botx + 5; i++)
-                for (int j = boty - 5; j <= boty + 5; j++)
-                    map[i, j] = MapConstants.floor;
-        }
 
 
 
@@ -166,8 +168,7 @@ namespace PozemiuRobotas2
 
             for (int i = botx - hallwayLength - 1; i > x + 2; i--)
                 if (random.Next(0, 2) == 0)
-                    saws.Add(ObstacleFactory.CreateSaw(i, (boty + random.Next(-3, 4)), random.Next(0, 2) != 0));
-
+                    saws.Add((Saw)sawFactory.Create(i, (boty + random.Next(-3, 4)), random.Next(0, 2) != 0));
             map[boty, x + 1] = MapConstants.roomKey;
 
 
@@ -206,7 +207,7 @@ namespace PozemiuRobotas2
                 x = (random.Next(-5, 6) + boty);
                 y = random.Next(botx + hallwayLength, tempx);
                 if (map[x, y] == MapConstants.floor)
-                    spykes.Add(ObstacleFactory.CreateSpyke(y, x, true));
+                    spykes.Add((Spyke)spykeFactory.Create(y, x, true));
             }
         }
 
@@ -214,10 +215,10 @@ namespace PozemiuRobotas2
         {
             DrawBorders();
 
-            int startY = Math.Max(0, boty - 10);
-            int endY = Math.Min(map.GetLength(0), boty + 10);
-            int startX = Math.Max(0, botx - 10);
-            int endX = Math.Min(map.GetLength(1), botx + 10);
+            int startY = Math.Max(0, boty - MapConstants.maxMapDrawSize);
+            int endY = Math.Min(map.GetLength(0), boty + MapConstants.maxMapDrawSize);
+            int startX = Math.Max(0, botx - MapConstants.maxMapDrawSize);
+            int endX = Math.Min(map.GetLength(1), botx + MapConstants.maxMapDrawSize);
 
             for (int y = startY; y < endY; y++)
             {
@@ -231,6 +232,7 @@ namespace PozemiuRobotas2
 
                     if (distance >= MapConstants.viewDistance)
                     {
+
                         Console.Write("██");
                         continue;
                     }
@@ -295,7 +297,6 @@ namespace PozemiuRobotas2
             if (cell == MapConstants.keyRoomGateRight) return " -";
 
 
-
             return "██";
         }
 
@@ -325,5 +326,6 @@ namespace PozemiuRobotas2
 
         public const int viewDistance = 8;
         public const int viewLimitation = 5;
+        public const int maxMapDrawSize = 10;
     }
 }

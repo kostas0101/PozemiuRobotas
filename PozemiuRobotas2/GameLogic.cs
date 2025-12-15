@@ -1,4 +1,5 @@
-﻿using static PozemiuRobotas2.Obstacles;
+﻿using System.Drawing;
+using static PozemiuRobotas2.Obstacles;
 using static PozemiuRobotas2.Player;
 
 namespace PozemiuRobotas2
@@ -28,7 +29,6 @@ namespace PozemiuRobotas2
         public static bool GameProcess(Robot robot, int[,] map, List<Obstacle> obstacles)
         {
 
-
             if (robot.GetBatteryLevel() <= 0)
                 return EndGame(hitEnamy: false, hitSpyke: false, hitSaw: false, exited: false, map, robot, outOfBattery: true);
 
@@ -47,11 +47,6 @@ namespace PozemiuRobotas2
 
             GateControls(robot, map);
             ReleaseEnemies(robot, obstacles);
-
-            /*
-            if (map[robot.GetY(), robot.GetX()] >= 20 && map[robot.GetY(), robot.GetX()] <= 29)
-                return EndGame(hitEnamy, hitSpyke, hitSaw, exited, map, robot, outOfBattery);
-            */
 
             return false;
         }
@@ -78,16 +73,16 @@ namespace PozemiuRobotas2
 
             if (robot.GetRoomKeyNumber() >= 2)
             {
-                map[56, 50] = 1;
-                map[56, 49] = 30;
-                map[56, 51] = 31;
+                map[GameConstants.keyGateY, GameConstants.keyGateX] = GameConstants.floor;
+                map[GameConstants.keyGateY, GameConstants.keyGateX - 1] = GameConstants.keyRoomGateLeft;
+                map[GameConstants.keyGateY, GameConstants.keyGateX + 1] = GameConstants.keyRoomGateRight;
             }
 
             if (robot.HasGateKey() && Distance(robot.GetX(), robot.GetY(), 50, 44) <= 3)
             {
-                map[44, 50] = 1;
-                map[44, 49] = 32;
-                map[44, 51] = 33;
+                map[GameConstants.exitGateY, GameConstants.exitGateX] = GameConstants.floor;
+                map[GameConstants.exitGateY, GameConstants.exitGateX - 1] = GameConstants.exitGateLeft;
+                map[GameConstants.exitGateY, GameConstants.exitGateX + 1] = GameConstants.exitGateRight;
             }
         }
 
@@ -182,8 +177,6 @@ namespace PozemiuRobotas2
         }
 
 
-
-
     }
     public static class GameConstants
     {
@@ -197,5 +190,11 @@ namespace PozemiuRobotas2
         public const int exitGateX = 50;
         public const int keyGateY = 56;
         public const int keyGateX = 50;
+
+        public const int floor = 1;
+        public const int exitGateLeft = 32;
+        public const int exitGateRight = 33;
+        public const int keyRoomGateLeft = 30;
+        public const int keyRoomGateRight = 31;
     }
 }

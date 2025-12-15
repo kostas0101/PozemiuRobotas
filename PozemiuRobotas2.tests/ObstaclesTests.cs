@@ -25,7 +25,7 @@ namespace PozemiuRobotas2.tests
         {
             var spyke = new Spyke(2, 2, extended: false);
             bool before = spyke.Status;
-            spyke.Update(new int[3,3], 0, 0);
+            spyke.Update(new int[3, 3], 0, 0);
             Assert.That(spyke.Status, Is.EqualTo(!before));
         }
 
@@ -33,7 +33,7 @@ namespace PozemiuRobotas2.tests
         public void Enamy_Inactive_DoesNotMove()
         {
             var enamy = new Enamy(4, 4, active: false);
-            enamy.Update(new int[10,10], robotX: 0, robotY: 0);
+            enamy.Update(new int[10, 10], robotX: 0, robotY: 0);
             Assert.That(enamy.X, Is.EqualTo(4));
             Assert.That(enamy.Y, Is.EqualTo(4));
         }
@@ -42,7 +42,7 @@ namespace PozemiuRobotas2.tests
         public void Enamy_Active_Moves_TowardsRobot()
         {
             var enamy = new Enamy(4, 4, active: true);
-            int[,] map = new int[10,10];
+            int[,] map = new int[10, 10];
             enamy.Update(map, robotX: 2, robotY: 2);
             Assert.That(enamy.X, Is.LessThan(4));
             Assert.That(enamy.Y, Is.LessThan(4));

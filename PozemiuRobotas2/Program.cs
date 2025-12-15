@@ -9,15 +9,14 @@ namespace PozemiuRobotas2
         {
             while (true)
             {
-                int[,] map = new int[startMapX, startMapY];
+                int[,] map = new int[mapSizeX, mapSizeY];
 
 
-                Robot robot = new Robot(startBotX, startBotY, startBatteryLevel);
+                Robot robot = new Robot(startingBotX, startingBotY, startingBatteryLevel);
                 List<Saw> saws = new List<Saw>();
                 List<Spyke> spykes = new List<Spyke>();
-                Enamy enamy = ObstacleFactory.CreateEnamy(0, 0, false);
+                Enamy enamy = null;
 
-                //test
 
                 Console.Clear();
                 Console.WriteLine("=====================");
@@ -48,10 +47,10 @@ namespace PozemiuRobotas2
 
 
         }
-        private const int startMapX = 100;
-        private const int startMapY = 100;
-        private const int startBotX = 50;
-        private const int startBotY = 50;
-        private const int startBatteryLevel = 100;
+        private const int mapSizeX = 100;
+        private const int mapSizeY = 100;
+        private const int startingBotX = 50;
+        private const int startingBotY = 50;
+        private const int startingBatteryLevel = 100;
     }
 }
